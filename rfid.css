@@ -3,10 +3,11 @@
     padding: 0;
     font-family: sans-serif;
 }
+
 .banner{
     width: 100%;
     height: 100vh;
-    background-image: url(banner.png);
+    background-image: url(banner_rfid.png);
     background-size: cover;
     background-position: top;
 }
@@ -86,39 +87,10 @@ span{
     z-index: -1;
     transition: 0.5s;
 }
-.end{
-    background-color: 0f0f0f;
-    background-size: auto;
-    background-position: center;
-}
-p{
-    color: aliceblue;
-    text-align: center;
-}
-.os li a{
-    text-decoration: none;
-    color: #fff;
-    text-transform: uppercase;
-}
-.os{
-    background-color: 0f0f0f;
-    background-size: cover;
-    
-}
-.os img{
-    width: 150px;
-}
-.rfid li a{
-    text-decoration: none;
-    color: #fff;
-    text-transform: uppercase;
-}
-.rfid{
-    background-color: 0f0f0f;
-    background-size: cover;
-}
-.rfid img{
-    width: 150;
+h2{
+    color: black;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke: 1.5px black;
 }
 .end{
     background-color: 0f0f0f;

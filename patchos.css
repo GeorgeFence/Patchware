@@ -21,8 +21,8 @@
 .show img{
     width: 30%;
     height: 30%;
-    align-self: center;
-    object-position: center;
+    align-self: normal;
+    object-position: left;
     cursor: pointer;
 }
 .navbar{
@@ -106,7 +106,12 @@ h2{
     -webkit-text-fill-color: white;
     -webkit-text-stroke: 1.5px black;
 }
+.end{
+    background-color: 0f0f0f;
+    background-size: auto;
+    background-position: center;
+}
 p{
-    text-decoration: underline;
-    color: white;
+    color: aliceblue;
+    text-align: center;
 }
