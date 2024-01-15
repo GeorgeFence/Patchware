@@ -19,8 +19,8 @@
     background-position: top;
 }
 .show img{
-    width: 30%;
-    height: 30%;
+    width: 640;
+    height: 400;
     align-self: normal;
     object-position: left;
     cursor: pointer;
