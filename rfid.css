@@ -59,6 +59,9 @@
     text-align: center;
     color: #fff;
 }
+.content img{
+    width: 50px;
+}
 button{
     width: 150;
     padding: 15px 0;
