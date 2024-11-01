@@ -1,1 +1,170 @@
-Zde bude muj wohnung
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Das Wohnung</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #mapContainer {
+            position: relative;
+            width: 1219px; /* Adjust size as needed */
+            height: auto;
+        }
+        #roomMap {
+            width: 100%;
+            height: auto;
+        }
+        .roomLabel {
+            position: absolute;
+            display: none; /* Hidden by default */
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            transform: translate(-50%, -50%); /* Center label */
+        }
+        #roomName {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+    <title>Cursor Coordinates on Image</title>
+    <style>
+        #mapContainer {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #image {
+            width: 800px; /* Adjust size as needed */
+            height: auto;
+            border: 2px solid #333;
+        }
+        #coordinates {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div id="mapContainer">
+    <img src="wohnung.png" id="roomMap" alt="Flat Layout">
+    <div id="roomName"></div>
+    <div id="coordinates">X: 0, Y: 0</div>
+
+    <div class="roomLabel" id="FlurRoomLabel">der Flur</div>
+    <div class="roomLabel" id="KinderLabel">das Kinderzimmer</div>
+    <div class="roomLabel" id="SchlafLabel">das Schlafzimmer</div>
+    <div class="roomLabel" id="WohnLabel">das Wohnzimmer</div>
+    <div class="roomLabel" id="KücheRoomLabel">die Küche</div>
+    <div class="roomLabel" id="BadLabel">das Bad</div>
+    <div class="roomLabel" id="ToiletteLabel">die Toilette</div>
+    <div class="roomLabel" id="KammerLabel">die Kammer</div>
+    <div class="roomLabel" id="BalkonLabel">der Balkon</div>
+</div>
+
+<script>
+    const roomNameDisplay = document.getElementById("roomName");
+    const roomMap = document.getElementById("roomMap");
+
+    // Room coordinates and names (x, y, width, height for each room)
+    const rooms = [
+        { name: "der Flur", x: 320, y: 290, width: 80, height: 80 ,label:document.getElementById("FlurRoomLabel")},
+        { name: "der Flur", x: 320, y: 290, width: 48, height: 110 ,label:document.getElementById("FlurRoomLabel")},
+        { name: "der Flur", x: 320, y: 95, width: 106, height: 120 ,label:document.getElementById("FlurRoomLabel")},
+        { name: "der Flur", x: 320, y: 215, width: 267, height: 115 ,label:document.getElementById("FlurRoomLabel")},
+        { name: "das Schlafzimmer", x: 20, y: 340, width: 320, height: 200 ,label:document.getElementById("SchlafLabel")},
+        { name: "das Kinderzimmer", x: 20, y: 28, width: 280, height: 300 ,label:document.getElementById("KinderLabel")},
+        { name: "das Wohnzimmer1", x: 598, y: 213, width: 424, height: 115 ,label:document.getElementById("WohnLabel")},
+        { name: "das Wohnzimmer2", x: 754, y: 325, width: 268, height: 215 ,label:document.getElementById("WohnLabel")},
+        { name: "das Wohnzimmer3", x: 1000, y: 394, width: 87, height: 146 ,label:document.getElementById("WohnLabel")},
+        { name: "die Küche", x: 598, y: 337, width: 144, height: 201 ,label:document.getElementById("KücheRoomLabel")},
+        { name: "das Bad", x: 356, y: 404, width: 230, height: 133 ,label:document.getElementById("BadLabel")},
+        { name: "die Toilette", x: 447, y: 338, width: 108, height: 52 ,label:document.getElementById("ToiletteLabel")},
+        { name: "die Kammer", x: 440, y: 115, width: 124, height: 89 ,label:document.getElementById("KammerLabel")},
+        { name: "der Balkon", x: 1048, y: 213, width: 157, height: 160 ,label:document.getElementById("BalkonLabel")},
+        // Add more rooms with correct coordinates here
+    ];
+
+    // Function to position the labels at the center of each room
+    function positionLabels() {
+        rooms.forEach(room => {
+            if(room.label.textContent == "das Wohnzimmer"){
+                const centerX = 598 + 488 / 2;
+                const centerY = 213 + 322 / 2;
+                room.label.style.left = `${centerX}px`;
+                room.label.style.top = `${centerY}px`
+            }
+            else if(room.label.textContent == "der Flur"){
+                const centerX = room.x + room.width / 2;
+                const centerY = room.y + room.height / 2;
+                room.label.style.left = `${centerX}px`;
+                room.label.style.top = `${centerY}px`
+            }
+            else{
+                const centerX = room.x + room.width / 2;
+                const centerY = room.y + room.height / 2;
+                room.label.style.left = `${centerX}px`;
+                room.label.style.top = `${centerY}px`;
+            }
+        });
+    }
+
+    // Position labels once when the page loads
+    window.addEventListener("load", positionLabels);
+
+    roomMap.addEventListener("mousemove", (event) => {
+        const rect = roomMap.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        let roomFound = false;
+        rooms.forEach(room => {
+            if (
+                x >= room.x &&
+                x <= room.x + room.width &&
+                y >= room.y &&
+                y <= room.y + room.height
+            ) {
+                room.label.style.display = "block"; // Show label
+                roomNameDisplay.textContent = room.label.textContent;
+                roomFound = true;
+            } else {
+                room.label.style.display = "none"; // Hide other labels
+            }
+        });
+
+        if (!roomFound) {
+            rooms.forEach(room => room.label.style.display = "none");
+        }
+    });
+</script>
+
+<script>
+    const image = document.getElementById("roomMap");
+    const coordinatesDisplay = document.getElementById("coordinates");
+
+    image.addEventListener("mousemove", (event) => {
+        // Get the image's bounding rectangle
+        const rect = image.getBoundingClientRect();
+
+        // Calculate the cursor's X and Y coordinates within the image
+        const x = Math.round(event.clientX - rect.left);
+        const y = Math.round(event.clientY - rect.top);
+
+        // Display the coordinates
+        coordinatesDisplay.textContent = `X: ${x}, Y: ${y}`;
+    });
+</script>
+</html>
