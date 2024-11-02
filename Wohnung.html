@@ -83,8 +83,11 @@
         }
         .roomLabel {
             position: absolute;
-            display: none; 
-            background-color: rgba(0, 0, 0, 0.7);
+            user-select: none;
+            pointer-events: none;
+            opacity: 0; 
+            transition: opacity 0.5s ease 0.5s; 
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 5px 10px;
             border-radius: 5px;
@@ -97,6 +100,25 @@
             font-size: 24px;
             color: #333;
         }
+        .bottomTextDIV  {
+            position: fixed;
+            bottom: 60px;
+            width: 50%;
+            transform: translate(50%, -50%); 
+            align-items: center;
+            color: white;
+            padding: 10px;
+            font-size: 20px;
+
+            opacity: 0;
+            transition: opacity 0.5s ease; 
+
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 15px; 
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2); 
+            padding: 20px; 
+            box-sizing: content-box; 
+        }
     </style>
 </head>
 
@@ -107,6 +129,8 @@
     </div>
     <div id="mapContainer" class="map">
         <img src="wohnung.png" id="roomMap" alt="Wohnung">
+
+        <div class="roomLabel" id="WohnungLabel">der Wohnung</div>
         <div class="roomLabel" id="FlurRoomLabel">der Flur</div>
         <div class="roomLabel" id="KinderLabel">das Kinderzimmer</div>
         <div class="roomLabel" id="SchlafLabel">das Schlafzimmer</div>
@@ -118,38 +142,49 @@
         <div class="roomLabel" id="BalkonLabel">der Balkon</div>
     </div>
     <div id="coordinates">X: 0, Y: 0</div>
+    <div class="bottomTextDIV" id="bottomText" ><div>
 </div>
+
 
 <script>
     const roomMap = document.getElementById("roomMap");
+    const bottomText = document.getElementById("bottomText");
 
     const rooms = [
-        { name: "der Flur", x: 320, y: 290, width: 80, height: 80 ,label:document.getElementById("FlurRoomLabel")},
-        { name: "der Flur", x: 320, y: 290, width: 48, height: 110 ,label:document.getElementById("FlurRoomLabel")},
-        { name: "der Flur", x: 320, y: 95, width: 106, height: 120 ,label:document.getElementById("FlurRoomLabel")},
-        { name: "der Flur", x: 320, y: 215, width: 267, height: 115 ,label:document.getElementById("FlurRoomLabel")},// Flur před, jinak nebude fachat
+        { name: "der Flur", x: 320, y: 290, width: 80, height: 80 ,label:document.getElementById("FlurRoomLabel"), textContent: "Der Flur ist schlicht und groß"},
+        { name: "der Flur", x: 320, y: 290, width: 48, height: 110 ,label:document.getElementById("FlurRoomLabel"), textContent: "Der Flur ist schlicht und groß"},
+        { name: "der Flur", x: 320, y: 95, width: 106, height: 120 ,label:document.getElementById("FlurRoomLabel"), textContent: "Der Flur ist schlicht und groß"},
+        { name: "der Flur", x: 320, y: 215, width: 267, height: 115 ,label:document.getElementById("FlurRoomLabel"), textContent: "Der Flur ist schlicht und groß"},// Flur před, jinak nebude fachat
 
-        { name: "das Schlafzimmer", x: 20, y: 340, width: 320, height: 200 ,label:document.getElementById("SchlafLabel")},
-        { name: "das Kinderzimmer", x: 20, y: 28, width: 280, height: 300 ,label:document.getElementById("KinderLabel")},
-        { name: "das Bad", x: 356, y: 404, width: 230, height: 133 ,label:document.getElementById("BadLabel")},
-        { name: "die Toilette", x: 447, y: 338, width: 108, height: 52 ,label:document.getElementById("ToiletteLabel")},
-        { name: "die Kammer", x: 440, y: 115, width: 124, height: 89 ,label:document.getElementById("KammerLabel")},
+        { name: "das Schlafzimmer", x: 20, y: 340, width: 320, height: 200 ,label:document.getElementById("SchlafLabel"), textContent: "Es gibt ein Bett im Schlafzimmer"},
+        { name: "das Kinderzimmer", x: 20, y: 28, width: 280, height: 300 ,label:document.getElementById("KinderLabel"), textContent: "Das Kinderzimmer ist groß, modern und fantastisch"},
+        { name: "das Bad", x: 356, y: 404, width: 230, height: 133 ,label:document.getElementById("BadLabel"), textContent: "Das Badezimmer ist mit einer Badewanne und einem Waschbecken ausgestattet"},
+        { name: "die Toilette", x: 447, y: 336, width: 108, height: 52 ,label:document.getElementById("ToiletteLabel"), textContent: "Die Toilette ist normal"},
+        { name: "die Kammer", x: 440, y: 115, width: 124, height: 89 ,label:document.getElementById("KammerLabel"), textContent: "In der Kammer gibt es einen Boiler und eine Waschmaschine"},
 
-        { name: "der Balkon", x: 1048, y: 213, width: 157, height: 160 ,label:document.getElementById("BalkonLabel")},
-        { name: "die Küche", x: 598, y: 337, width: 144, height: 201 ,label:document.getElementById("KücheRoomLabel")},
-        { name: "das Wohnzimmer", x: 598, y: 213, width: 487, height: 323 ,label:document.getElementById("WohnLabel")},//Küche und Balkon před, jinak nebude fachat
+        { name: "der Balkon", x: 1048, y: 213, width: 157, height: 160 ,label:document.getElementById("BalkonLabel"), textContent: "Der Balkon bietet keine gute Aussicht"},
+        { name: "die Küche", x: 598, y: 337, width: 144, height: 201 ,label:document.getElementById("KücheRoomLabel"), textContent: "Die Küche ist komplett ausgestattet und modern"},
+        { name: "das Wohnzimmer", x: 598, y: 213, width: 487, height: 323 ,label:document.getElementById("WohnLabel"), textContent: "Das Wohnzimmer ist groß, gemütlich und ideal. Die Möbel sind modern."},//Küche und Balkon před, jinak nebude fachat
+
+        { name: "der Wohnung", x: 0, y: 0, width: 1219, height: 527 ,label:document.getElementById("WohnungLabel"), textContent: "Der Wohnung ist 103 Quadratmeter mit Balkon."},
+        
     ];
 
     function positionLabels() {
         rooms.forEach(room => {
             const centerX = room.x + 20 + room.width / 2;
-                const centerY = room.y + 20 + room.height / 2;
-                room.label.style.left = `${centerX}px`;
-                room.label.style.top = `${centerY}px`;
+            const centerY = room.y + 20 + room.height / 2;
+            room.label.style.left = `${centerX}px`;
+            room.label.style.top = `${centerY}px`;
         });
     }
 
     window.addEventListener("load", positionLabels);
+
+    roomMap.addEventListener("mouseleave", () => {
+        rooms.forEach(room => room.label.style.opacity = "0");
+        bottomText.style.opacity = "0";
+    });
 
     roomMap.addEventListener("mousemove", (event) => {
         const rect = roomMap.getBoundingClientRect();
@@ -157,6 +192,8 @@
         const y = event.clientY - rect.top;
 
         let roomFound = false;
+        bottomText.style.opacity = "0";
+        rooms.forEach(room2 =>{room2.label.style.opacity = "0";});
         rooms.forEach(room => {
             if (!roomFound) {
                 if (
@@ -165,17 +202,19 @@
                     y >= room.y &&
                     y <= room.y + room.height
                 ) {
-                    rooms.forEach(room =>{room.label.style.display = "none";});
-                    room.label.style.display = "block"; // Show label
+                    rooms.forEach(room2 => {room2.label.opacity = "0";});
+                    room.label.style.opacity = "1"; 
+                    bottomText.textContent = room.textContent;
+                    bottomText.style.opacity = "1"; 
                     roomFound = true;
                 } else {
-                    room.label.style.display = "none"; // Hide other labels
+                    room.label.style.opacity = "0"; 
                 }
             }
         });
 
         if (!roomFound) {
-            rooms.forEach(room => room.label.style.display = "none");
+            rooms.forEach(room => room.label.style.opacity = "0");
         }
     });
 </script>
