@@ -6,17 +6,47 @@
     <title>Das Wohnung</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
             display: flex;
+            text-align: center;
             flex-direction: column;
             align-items: center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
         }
+        .title {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 5em; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .title-bold {
+            font-weight: bold;
+            color: white;
+            padding: 5px 10px;
+        }
+
+        .title-normal {
+            font-weight: normal;
+            color: black;
+            padding: 5px 10px;
+        }
+
+        /*.title {
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+        }*/
         .bg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(300deg,deepskyblue,darkviolet,blue);
+            background: linear-gradient(300deg,deepskyblue,rgb(179, 0, 255),blue);
             background-size: 180% 180%;
             animation: gradient-animation 18s ease infinite;
         }
@@ -69,10 +99,14 @@
         }
     </style>
 </head>
+
 <div class="bg">
+    <div class="title">
+        <span class="title-bold">Meine</span>
+        <span class="title-normal">Wohnung</span>
+    </div>
     <div id="mapContainer" class="map">
         <img src="wohnung.png" id="roomMap" alt="Wohnung">
-
         <div class="roomLabel" id="FlurRoomLabel">der Flur</div>
         <div class="roomLabel" id="KinderLabel">das Kinderzimmer</div>
         <div class="roomLabel" id="SchlafLabel">das Schlafzimmer</div>
